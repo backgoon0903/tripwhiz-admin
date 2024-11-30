@@ -1,7 +1,7 @@
 import axios from "axios";
 import { PageResponseDTO, Spot } from '../types/spot';
 
-const host = "http://localhost:8080/api/spot";
+const host = "http://localhost:8082/api/spot";
 
 // Spot 목록 조회 (페이지네이션 적용)
 export const getSpots = (

@@ -3,7 +3,7 @@
     </a>
 </p>
 <h1 align="center">
-    <b>Tokyo Free White Typescript React Admin Dashboard</b>
+    <b>Tripwhiz</b>
     <br>
     <a href="https://twitter.com/intent/tweet?url=https://bloomui.com&text=I like this React admin dashboard">
     </a>

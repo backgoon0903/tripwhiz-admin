@@ -1,21 +1,16 @@
 <p align="center">
     <a href="https://bloomui.com" title="BloomUI.com">
-        <img src="https://bloomui.s3.us-east-2.amazonaws.com/tokyo-logo.png" alt="Tokyo Free White Typescript React Admin Dashboard">
     </a>
 </p>
 <h1 align="center">
     <b>Tokyo Free White Typescript React Admin Dashboard</b>
     <br>
     <a href="https://twitter.com/intent/tweet?url=https://bloomui.com&text=I like this React admin dashboard">
-        <img src="https://img.shields.io/twitter/url/http/shields.io.svg?style=social" />
     </a>
 </h1>
 <div align="center">
 
-![version](https://img.shields.io/badge/version-2.0.0-blue.svg)
-![license](https://img.shields.io/badge/license-MIT-blue.svg)
-
-<a href="https://bloomui.com/product/tokyo-free-white-react-typescript-material-ui-admin-dashboard/"><img src="https://bloomui.s3.us-east-2.amazonaws.com/tokyo-free-white-react-typescript-material-ui-admin-dashboard.jpg" /></a>
+<a href="https://bloomui.com/product/tokyo-free-white-react-typescript-material-ui-admin-dashboard/"></a>
 </div>
 
 <a href="https://bloomui.com/product/tokyo-free-white-react-typescript-material-ui-admin-dashboard/"><h3>Free React Typescript Admin Dashboard Template built with Material-UI</h3></a>

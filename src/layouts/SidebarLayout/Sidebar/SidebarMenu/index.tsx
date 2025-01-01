@@ -239,6 +239,15 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
+                  to="/product/list"
+                  startIcon={<TableChartTwoToneIcon />}
+                >
+                  PRODUCT
+                </Button>
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
                   to="/ord/list"
                   startIcon={<TableChartTwoToneIcon />}
                 >
@@ -248,28 +257,19 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/boa/list"
-                  startIcon={<TableChartTwoToneIcon />}
-                >
-                  BOARD
-                </Button>
-                <Button
-                  disableRipple
-                  component={RouterLink}
-                  onClick={closeSidebar}
-                  to="/product/list"
-                  startIcon={<TableChartTwoToneIcon />}
-                >
-                  Product
-                </Button>
-                <Button
-                  disableRipple
-                  component={RouterLink}
-                  onClick={closeSidebar}
                   to="/stock/list"
                   startIcon={<TableChartTwoToneIcon />}
                 >
                   STOCK
+                </Button>
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/boa/list"
+                  startIcon={<TableChartTwoToneIcon />}
+                >
+                  BOARD
                 </Button>
                 <Button
                   disableRipple

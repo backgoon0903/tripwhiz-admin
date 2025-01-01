@@ -4,11 +4,11 @@ export interface Spot {
   spotname: string;
   address: string;
   tel: string;
-  delFlag: boolean; // 삭제 여부
-  storeowner: {
-    sno: number;
-    sname: string;
-  };
+  latitude?: number;
+  longitude?: number;
+  sno: number;
+  sname: string;
+
 }
 
 // 페이지네이션 응답 타입

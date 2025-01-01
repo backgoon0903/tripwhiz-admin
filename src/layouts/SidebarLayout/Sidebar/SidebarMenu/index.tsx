@@ -239,43 +239,43 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/product/list"
+                  to="/app/product/list"
                   startIcon={<TableChartTwoToneIcon />}
                 >
-                  PRODUCT
+                  Product
                 </Button>
                 <Button
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/ord/list"
+                  to="/app/stock/list"
                   startIcon={<TableChartTwoToneIcon />}
                 >
-                  ORDER
+                  Stock
                 </Button>
                 <Button
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/stock/list"
+                  to="/app/ord/list"
                   startIcon={<TableChartTwoToneIcon />}
                 >
-                  STOCK
+                  Order
                 </Button>
                 <Button
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/boa/list"
+                  to="/app/boa/list"
                   startIcon={<TableChartTwoToneIcon />}
                 >
-                  BOARD
+                  Board
                 </Button>
                 <Button
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/qna/list"
+                  to="/app/qna/list"
                   startIcon={<TableChartTwoToneIcon />}
                 >
                   Q&A
@@ -284,7 +284,7 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
-                  to="/faq/list"
+                  to="/app/faq/list"
                   startIcon={<TableChartTwoToneIcon />}
                 >
                   FAQ

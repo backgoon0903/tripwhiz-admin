@@ -1,241 +1,262 @@
-import { ChangeEvent, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Grid,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+  InputLabel,
+  FormControl, SelectChangeEvent
+} from '@mui/material';
+import {
+  Category,
+  ProductListDTO,
+  SubCategory,
+  ThemeCategory,
+  AttachFile,
+} from '../../types/product';
+import {
+  createProduct,
+  fetchCategories,
+  fetchSubCategories,
+  fetchThemeCategories,
+} from '../../api/productAPI';
 
-import { postAdd } from '../../api/productAPI';
-import { useNavigate } from 'react-router-dom';
-import { Box, Button, Card, CardContent, CardHeader, Divider, Grid } from '@mui/material';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
-import { IProduct } from '../../types/product';
+const AddComponent = () => {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
+  const [themeCategories, setThemeCategories] = useState<ThemeCategory[]>([]);
+  const [product, setProduct] = useState<ProductListDTO>({
+    pno: 0,
+    pname: '',
+    price: 0,
+    pdesc: '',
+    category: { cno: 0, cname: '' },
+    subCategory: { scno: 0, sname: '' },
+    tnos: [],
+    attachFiles: [],
+  });
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-const initialState: IProduct = {
-  pno: 0,
-  pname: '',
-  pdesc: '',
-  price: 0,
-  category: '',
-  subcategory: '',
-  themecategory: '',
-  fileUrl: '',
-  delflag: false,
-  uploadFileNames:[]
-};
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const categoryData = await fetchCategories();
+        setCategories(categoryData);
+      } catch {
+        setError('카테고리를 불러오는데 실패했습니다.');
+      }
+    };
 
-const categories = [
-  { cno: 1, name: '수납/편의' },
-  { cno: 2, name: '의류' },
-  { cno: 3, name: '안전/위생' },
-  { cno: 4, name: '악세사리' },
-  { cno: 5, name: '액티비티 용품' },
-];
+    const loadThemeCategories = async () => {
+      try {
+        const themeData = await fetchThemeCategories();
+        setThemeCategories(themeData);
+      } catch {
+        setError('테마 카테고리를 불러오는데 실패했습니다.');
+      }
+    };
 
-const subcategories = {
-  1: [
-    { scno: 1, name: '파우치' },
-    { scno: 2, name: '케이스/커버' },
-    { scno: 3, name: '안대/목베개' },
-    { scno: 4, name: '와이파이 유심' }
-  ],
-  2: [
-    { scno: 5, name: '아우터' },
-    { scno: 6, name: '상의/하의' },
-    { scno: 7, name: '잡화' }
-  ],
-  3: [
-    { scno: 8, name: '뷰티케어' },
-    { scno: 9, name: '세면도구' },
-    { scno: 10, name: '상비약' }
-  ],
-  4: [
-    { scno: 11, name: '전기/전자용품' },
-    { scno: 12, name: '여행 아이템' }
-  ],
-  5: [
-    { scno: 13, name: '캠핑/등산' },
-    { scno: 14, name: '수영' },
-    { scno: 15, name: '야외/트래블' }
-  ]
-};
+    loadCategories();
+    loadThemeCategories();
+  }, []);
 
-function ProductAddComponent() {
-  const [product, setProduct] = useState({ ...initialState });
-  const [categoryCno, setCategoryCno] = useState(1);
-  const [subCategoryScno, setSubCategoryScno] = useState(0);
-  const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const navigate = useNavigate();
+  const handleCategoryChange = async (event: SelectChangeEvent) => {
+    const selectedCategoryId = event.target.value; // 선택된 카테고리의 ID를 먼저 추출
 
-  // const moveToList = () => {
-  //   navigate('/product/list');
-  // };
+    const selectedCategory = categories.find((category) => category.cno === Number(selectedCategoryId));
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setProduct((prev) => ({
-      ...prev,
-      [name]: value,
+    setProduct((prevProduct) => ({
+      ...prevProduct,
+      category: selectedCategory || { cno: 0, cname: '' },
+      subCategory: { scno: 0, sname: '' },
+    }));
+    setSubCategories([]);
+
+    if (selectedCategory) {
+      try {
+        const subCategoryData = await fetchSubCategories(selectedCategory.cno);
+        setSubCategories(subCategoryData);
+      } catch {
+        setError('서브카테고리를 불러오는데 실패했습니다.');
+      }
+    }
+  };
+
+  const handleSubCategoryChange = (event: SelectChangeEvent) => {
+    // Access selected value directly
+    const selectedSubCategoryId = event.target.value;
+
+    const selectedSubCategory = subCategories.find((subCategory) => subCategory.scno === Number(selectedSubCategoryId));
+    setProduct((prevProduct) => ({
+      ...prevProduct,
+      subCategory: selectedSubCategory || { scno: 0, sname: '' },
     }));
   };
 
-  const handleCategoryChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const selectedCategoryCno = parseInt(e.target.value, 10);
-    setCategoryCno(selectedCategoryCno);
-    setSubCategoryScno(0); // 상위 카테고리 변경 시 하위 카테고리 초기화
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setProduct({ ...product, [name]: value });
   };
 
-  const handleSubCategoryChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSubCategoryScno(parseInt(e.target.value, 10));
-  };
-
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      setSelectedFiles(e.target.files); // 파일 리스트 저장
+      const files = Array.from(e.target.files);
+      setImageFiles(files);
     }
   };
 
-  const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleThemeChange = (event: SelectChangeEvent<number[]>): void => {
+    // 선택된 값들을 직접 접근
+    const selectedThemeNos = event.target.value as number[];
+
+    // product 상태 업데이트
+    setProduct((prevProduct) => ({
+      ...prevProduct,
+      tnos: selectedThemeNos,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const formData = new FormData();
-
-    // JSON 데이터를 Blob으로 추가
-    const jsonBlob = new Blob(
-      [
-        JSON.stringify({
-          pname: product.pname,
-          pdesc: product.pdesc,
-          price: product.price,
-          categoryCno: categoryCno,
-          subCategoryScno: subCategoryScno,
-          delflag: false,
-        }),
-      ],
-      { type: 'application/json' }
-    );
-    formData.append('productListDTO', jsonBlob); // JSON 데이터를 FormData에 추가
-
-    // 파일 추가
-    if (selectedFiles) {
-      for (let i = 0; i < selectedFiles.length; i++) {
-        formData.append('files', selectedFiles[i]);
-      }
-    }
+    const formattedProduct = {
+      ...product,
+      cno: product.category.cno,
+      scno: product.subCategory.scno,
+      category: undefined,
+      subCategory: undefined,
+    };
 
     try {
-      const response = await postAdd(formData);
-      console.log('Product added successfully:', response);
-      navigate('/product/list');
-    } catch (error) {
-      console.error('Failed to add product:', error);
+      const response = await createProduct(formattedProduct, imageFiles);
+      alert(`상품이 성공적으로 생성되었습니다! ID: ${response}`);
+    } catch {
+      setError('상품 생성에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
-
   return (
-    <Grid
-      container
-      direction="column"
-      justifyContent="center"
-      alignItems="stretch"
-      spacing={3}
-      sx={{ maxWidth: '800px', margin: '0 auto' }}
-    >
-      <Card>
-        <CardHeader title="상품 등록 화면" />
-        <Divider />
+    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+      <Card sx={{ maxWidth: 600, width: '100%' }}>
+        <CardHeader title="상품 추가" sx={{ textAlign: 'center' }} />
         <CardContent>
-          <TextField
-            id="pname"
-            label="상품명"
-            value={product.pname}
-            name="pname"
-            onChange={handleChange}
-            fullWidth
-            sx={{ marginBottom: 2 }}
-          />
-          <TextField
-            id="price"
-            label="가격"
-            type="number"
-            value={product.price}
-            name="price"
-            onChange={handleChange}
-            fullWidth
-            sx={{ marginBottom: 2 }}
-          />
-          <TextField
-            id="pdesc"
-            label="상품 설명"
-            value={product.pdesc}
-            name="pdesc"
-            onChange={handleChange}
-            fullWidth
-            multiline
-            minRows={4}
-            sx={{ marginBottom: 2 }}
-          />
-          <TextField
-            id="categoryCno"
-            select
-            label="상위 카테고리"
-            value={categoryCno}
-            onChange={handleCategoryChange}
-            helperText="상위 카테고리를 선택하세요"
-            fullWidth
-            sx={{ marginBottom: 2 }}
-          >
-            {categories.map((category) => (
-              <MenuItem key={category.cno} value={category.cno}>
-                {category.name}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            id="subCategoryScno"
-            select
-            label="하위 카테고리"
-            value={subCategoryScno}
-            onChange={handleSubCategoryChange}
-            helperText="하위 카테고리를 선택하세요"
-            fullWidth
-            sx={{ marginBottom: 2 }}
-          >
-            {subcategories[categoryCno]?.map((subcategory) => (
-              <MenuItem key={subcategory.scno} value={subcategory.scno}>
-                {subcategory.name}
-              </MenuItem>
-            ))}
-          </TextField>
-          <Box sx={{ marginBottom: 2 }}>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleFileChange}
-              style={{ marginBottom: '16px' }}
-            />
-            {selectedFiles && (
-              <Box>
-                <strong>선택된 파일:</strong>
-                <ul>
-                  {Array.from(selectedFiles).map((file, index) => (
-                    <li key={index}>{file.name}</li>
-                  ))}
-                </ul>
-              </Box>
-            )}
-          </Box>
-          <Button
-            sx={{ marginTop: 2 }}
-            variant="contained"
-            onClick={handleClick}
-          >
-            상품 등록
-          </Button>
+          {error && <Typography color="error" variant="body1">{error}</Typography>}
+          <form onSubmit={handleSubmit}>
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="상품명"
+                  name="pname"
+                  variant="outlined"
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="가격"
+                  name="price"
+                  type="number"
+                  variant="outlined"
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label="설명"
+                  name="pdesc"
+                  variant="outlined"
+                  multiline
+                  rows={4}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel>카테고리</InputLabel>
+                  <Select
+                    value={product.category?.cno || ''}
+                    onChange={handleCategoryChange}
+                    label="카테고리"
+                  >
+                    <MenuItem value="">카테고리를 선택하세요</MenuItem>
+                    {categories.map((category) => (
+                      <MenuItem key={category.cno} value={category.cno}>
+                        {category.cname}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth disabled={!subCategories.length}>
+                  <InputLabel>서브카테고리</InputLabel>
+                  <Select
+                    value={product.subCategory?.scno || ''}
+                    onChange={handleSubCategoryChange}
+                    label="서브카테고리"
+                  >
+                    <MenuItem value="">서브카테고리를 선택하세요</MenuItem>
+                    {subCategories.map((subCategory) => (
+                      <MenuItem key={subCategory.scno} value={subCategory.scno}>
+                        {subCategory.sname}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControl fullWidth>
+                  <InputLabel>테마 카테고리</InputLabel>
+                  <Select
+                    multiple
+                    value={product.tnos}
+                    onChange={handleThemeChange}
+                    label="테마 카테고리"
+                  >
+                    {themeCategories.map((theme) => (
+                      <MenuItem key={theme.tno} value={theme.tno}>
+                        {theme.tname}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  component="label"
+                  fullWidth
+                >
+                  이미지 업로드
+                  <input
+                    type="file"
+                    hidden
+                    multiple
+                    onChange={handleFileChange}
+                  />
+                </Button>
+              </Grid>
+              <Grid item xs={12}>
+                <Button type="submit" variant="contained" color="primary" fullWidth>
+                  상품 추가
+                </Button>
+              </Grid>
+            </Grid>
+          </form>
         </CardContent>
       </Card>
-    </Grid>
+    </Box>
   );
-}
+};
 
-export default ProductAddComponent;
+export default AddComponent;

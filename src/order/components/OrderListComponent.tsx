@@ -11,20 +11,27 @@ import {
   Paper,
   Button,
   CircularProgress,
+  Checkbox,
 } from "@mui/material";
 import PageComponent from "../../components/Page/PageComponent";
-import { IOrderList, IPageResponse } from "../../types/order";
-import { deleteOrders, getOrderList } from '../../api/orderAPI';
+import { OrderListDTO } from "../../types/order";
+import { fetchOrderList } from "../../api/orderAPI";
+import { sendTestNotification } from "../../api/fcmAPI"; // FCM 알림 전송 API 추가
 import { useNavigate } from "react-router-dom";
-import Checkbox from '@mui/material/Checkbox';
+import { PageRequestDTO, PageResponseDTO } from "../../types/page";
 
-const initialState: IPageResponse = {
-  dtoList: [], // 빈 배열로 초기화
+const initialPageRequest: PageRequestDTO = {
+  page: 1,
+  size: 10,
+};
+
+const initialPageResponse: PageResponseDTO<OrderListDTO> = {
+  dtoList: [],
   current: 1,
   next: false,
   nextPage: 0,
   pageNumList: [],
-  pageRequestDTO: { page: 1, size: 10, categoryCno: null, subCategoryScno: null, themeCategory: null },
+  pageRequestDTO: initialPageRequest,
   prev: false,
   prevPage: 0,
   totalCount: 0,
@@ -33,8 +40,8 @@ const initialState: IPageResponse = {
 
 function OrderListComponent() {
   const navigate = useNavigate();
-  const [pageResponse, setPageResponse] = useState<IPageResponse>(initialState);
-  const [currentPage, setCurrentPage] = useState<number>(1); // 현재 페이지
+  const [pageResponse, setPageResponse] = useState<PageResponseDTO<OrderListDTO>>(initialPageResponse);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedOrders, setSelectedOrders] = useState<number[]>([]);
 
@@ -42,7 +49,7 @@ function OrderListComponent() {
     const fetchOrders = async () => {
       setLoading(true);
       try {
-        const response = await getOrderList(currentPage - 1, 10); // 페이지 번호는 0부터 시작
+        const response = await fetchOrderList({ ...initialPageRequest, page: currentPage - 1 });
         setPageResponse(response);
       } catch (error) {
         console.error("Error fetching orders:", error);
@@ -54,8 +61,8 @@ function OrderListComponent() {
     fetchOrders();
   }, [currentPage]);
 
-  const moveToRead = (ono: number | undefined) => {
-    navigate(`/ord/read/${ono}`);
+  const moveToRead = (ono: number) => {
+    navigate(`/app/ord/read/${ono}`);
   };
 
   const handleCheckboxChange = (ono: number) => {
@@ -64,26 +71,25 @@ function OrderListComponent() {
     );
   };
 
-  const handleDeleteSelected = async () => {
+  const handleSendNotification = async () => {
     if (selectedOrders.length === 0) {
-      alert("삭제할 주문을 선택하세요.");
+      alert("알림을 보낼 주문을 선택해주세요.");
       return;
     }
 
-    const confirmDelete = window.confirm("선택된 주문을 삭제하시겠습니까?");
-    if (!confirmDelete) return;
+    const selectedEmails = pageResponse.dtoList
+      .filter((order) => selectedOrders.includes(order.ono))
+      .map((order) => order.email);
 
     try {
-      await deleteOrders(selectedOrders); // 선택된 주문 삭제 API 호출
-      setPageResponse((prev) => ({
-        ...prev,
-        dtoList: prev.dtoList.filter((order) => !selectedOrders.includes(order.ono)),
-      })); // UI 업데이트: 삭제된 주문 제거
-      setSelectedOrders([]); // 선택 초기화
-      alert("선택된 주문이 삭제되었습니다.");
+      for (const email of selectedEmails) {
+        await sendTestNotification(email, "주문 알림", true);
+        console.log(`알림 전송 성공: ${email}`);
+      }
+      alert("알림이 성공적으로 전송되었습니다.");
     } catch (error) {
-      console.error("Error deleting selected orders:", error);
-      alert("주문 삭제 중 오류가 발생했습니다.");
+      console.error("알림 전송 실패:", error);
+      alert("알림 전송 중 오류가 발생했습니다.");
     }
   };
 
@@ -102,36 +108,44 @@ function OrderListComponent() {
               <TableRow>
                 <TableCell align="center">선택</TableCell>
                 <TableCell align="center">주문 번호</TableCell>
-                <TableCell align="center">회원 번호</TableCell>
-                <TableCell align="center">이름</TableCell>
+                <TableCell align="center">회원</TableCell>
                 <TableCell align="center">총 수량</TableCell>
                 <TableCell align="center">총 가격</TableCell>
                 <TableCell align="center">주문일</TableCell>
                 <TableCell align="center">픽업일</TableCell>
+                <TableCell align="center">지점</TableCell>
                 <TableCell align="center">상태</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {pageResponse.dtoList.map((order: IOrderList) => {
-                const { ono, mno, name, totalAmount, totalPrice, createTime, pickUpDate, status, delFlag } = order;
+              {pageResponse.dtoList.map((order) => {
+                const { ono, email, totalAmount, totalPrice, createTime, pickUpDate, spno, status } = order;
 
                 return (
                   <TableRow
                     key={ono}
+                    onClick={(e: React.MouseEvent<HTMLTableRowElement>) => {
+                      const target = e.target as HTMLElement;
+                      if (target.tagName !== "INPUT") moveToRead(ono);
+                    }}
+                    sx={{ cursor: "pointer" }}
                   >
                     <TableCell align="center">
                       <Checkbox
-                        checked={selectedOrders.includes(ono || -1)}
-                        onChange={() => handleCheckboxChange(ono || -1)}
+                        checked={selectedOrders.includes(ono)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          e.stopPropagation();
+                          handleCheckboxChange(ono);
+                        }}
                       />
                     </TableCell>
                     <TableCell align="center">{ono}</TableCell>
-                    <TableCell align="center">{mno}</TableCell>
-                    <TableCell align="center">{name}</TableCell>
-                    <TableCell align="center">{totalAmount}</TableCell>
-                    <TableCell align="center">{totalPrice.toLocaleString()} 원</TableCell>
+                    <TableCell align="center">{email}</TableCell>
+                    <TableCell align="center">{totalAmount}개</TableCell>
+                    <TableCell align="center">{totalPrice.toLocaleString()}원</TableCell>
                     <TableCell align="center">{createTime}</TableCell>
                     <TableCell align="center">{pickUpDate}</TableCell>
+                    <TableCell align="center">{spno}</TableCell>
                     <TableCell align="center">
                       <Typography
                         variant="body2"
@@ -155,22 +169,22 @@ function OrderListComponent() {
                 );
               })}
             </TableBody>
-            <Box marginTop={2} textAlign="right">
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleDeleteSelected}
-                disabled={selectedOrders.length === 0}
-              >
-                선택 삭제
-              </Button>
-            </Box>
           </Table>
         </TableContainer>
       )}
 
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={handleSendNotification}
+        sx={{ marginBottom: 2 }}
+      >
+        선택한 주문에 알림 보내기
+      </Button>
+
       <PageComponent
         pageResponse={pageResponse}
+        onPageChange={(newPage) => setCurrentPage(newPage)}
       />
     </Box>
   );

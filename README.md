@@ -1,4 +1,4 @@
-![Project Screenshot](images/logo/ewhiz.png)
+![Project Screenshot](./ewhiz.png)
 
 # TRIPWHIZ
 

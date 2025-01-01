@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback, ChangeEvent } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Box, Card, CardContent, Typography, TextField, Button, CircularProgress } from '@mui/material';
-import { updateFaq, getFaqById } from '../../../../tripwhiz-admin/src/api/faqAPI';
-import { IFaq } from '../../../../tripwhiz-admin/src/types/faq';
+import { updateFaq, getFaqById } from '../../api/faqAPI';
+import { IFaq } from '../../types/faq';
 
 const initState: IFaq = { fno: 0, question: '', answer: '', del_flag: false, view_cnt: 0, category: 'APP'  };
 
@@ -32,10 +32,10 @@ function FaqModifyComponent() {
   const handleClick = () => {
     if (!faq.fno) return;
     setLoading(true);
-    updateFaq(faq.fno, faq).then(() => navigate('/faq/list')).finally(() => setLoading(false));
+    updateFaq(faq.fno, faq).then(() => navigate('/app/faq/list')).finally(() => setLoading(false));
   };
 
-  const handleCancel = () => navigate('/faq/list');
+  const handleCancel = () => navigate('/app/faq/list');
 
   return (
     <Box display="flex" justifyContent="center" alignItems="center" height="100vh" bgcolor="#f5f5f5">

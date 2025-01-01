@@ -22,7 +22,7 @@ function BoardReadComponent() {
                     });
                 } else {
                     alert('게시글을 찾을 수 없습니다.');
-                    navigate('/boa/list');
+                    navigate('/app/boa/list');
                 }
             })
             .catch((error) => {
@@ -35,7 +35,7 @@ function BoardReadComponent() {
 
     // 목록으로 이동
     const handleList = () => {
-        navigate('/boa/list');
+        navigate('/app/boa/list');
     };
 
     // 수정 모드 전환
@@ -63,7 +63,7 @@ function BoardReadComponent() {
             deleteBoard(parseInt(bno))
                 .then(() => {
                     alert('삭제되었습니다.');
-                    navigate('/boa/list');
+                    navigate('/app/boa/list');
                 })
                 .catch((error) => {
                     console.error('삭제 실패:', error);

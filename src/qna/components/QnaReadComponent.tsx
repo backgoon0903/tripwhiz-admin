@@ -76,13 +76,13 @@ function QnaReadComponent() {
                   />
 
                   <Box display="flex" justifyContent="flex-end" mt={3}>
-                    <Button variant="outlined" onClick={() => navigate('/qna/list')} sx={{ mr: 1 }}>
+                    <Button variant="outlined" onClick={() => navigate('/app/qna/list')} sx={{ mr: 1 }}>
                       취소
                     </Button>
 
-                    {/*<Button variant="contained" color="primary" onClick={handleSubmit}>
+                    <Button variant="contained" color="primary">
                       답변 완료
-                    </Button>*/}
+                    </Button>
                   </Box>
                 </>
               )}

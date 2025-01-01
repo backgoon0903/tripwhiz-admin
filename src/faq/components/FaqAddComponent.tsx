@@ -14,8 +14,8 @@ import {
   Select,
   SelectChangeEvent,
 } from '@mui/material';
-import { postFaq } from '../../../../tripwhiz-admin/src/api/faqAPI';
-import { FaqCategory, IFaq } from '../../../../tripwhiz-admin/src/types/faq';
+import { postFaq } from '../../api/faqAPI';
+import { FaqCategory, IFaq } from '../../types/faq';
 
 // 초기 상태 정의
 const initState: IFaq = {
@@ -52,7 +52,7 @@ function FaqAddComponent() {
     postFaq(faq)
       .then(() => {
         setFaq(initState);
-        navigate('/faq/list');
+        navigate('/app/faq/list');
       })
       .finally(() => {
         setLoading(false);
@@ -60,7 +60,7 @@ function FaqAddComponent() {
   };
 
   const handleCancel = () => {
-    navigate('/faq/list');
+    navigate('/app/faq/list');
   };
 
   return (

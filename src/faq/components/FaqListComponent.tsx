@@ -49,7 +49,7 @@ function FaqListComponent() {
     fetchFaqs();
   }, [currentPage, filterCategory]);
 
-  const handleEdit = (fno: number) => navigate(`/faq/update/${fno}`);
+  const handleEdit = (fno: number) => navigate(`/app/faq/update/${fno}`);
 
   const handleDelete = (fno: number) => {
     if (window.confirm('이 FAQ를 삭제하시겠습니까?')) {
@@ -64,7 +64,7 @@ function FaqListComponent() {
   };
 
   const moveToAddPage = ():void => {
-    navigate(`/faq/add`)
+    navigate(`/app/faq/add`)
   }
 
   const totalPages = Math.ceil(totalCount / pageSize);

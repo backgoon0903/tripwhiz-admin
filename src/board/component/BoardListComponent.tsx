@@ -44,7 +44,7 @@ function BoardListComponent() {
 
     // 게시글 추가 버튼 클릭 시 호출되는 함수
     const handleAddPost = () => {
-        navigate('/boa/add'); // '/boa/add' 경로로 이동하여 게시글 추가 페이지로 이동
+        navigate('/app/boa/add'); // '/boa/add' 경로로 이동하여 게시글 추가 페이지로 이동
     };
 
     return (
@@ -87,10 +87,10 @@ function BoardListComponent() {
                                     <TableRow
                                         hover
                                         key={`fixed-${board.bno}`}
-                                        onClick={() => navigate(`/boa/read/${board.bno}`)}
+                                        onClick={() => navigate(`/app/boa/read/${board.bno}`)}
                                         style={{ backgroundColor: '#f9f9f9' }}
                                     >
-                                        <TableCell align="center">{board.bno}</TableCell>
+                                        <TableCell align="center">{boardList.length - board.bno}</TableCell>
                                         <TableCell align="center" style={{ width: '450px' }}>
                                             <Typography variant="body1" fontWeight="bold" align="center" noWrap>
                                                 {board.title}
@@ -109,7 +109,7 @@ function BoardListComponent() {
                                     <TableRow
                                         hover
                                         key={board.bno}
-                                        onClick={() => navigate(`/boa/read/${board.bno}`)}
+                                        onClick={() => navigate(`/app/boa/read/${board.bno}`)}
                                     >
                                         <TableCell align="center">{board.bno}</TableCell>
                                         <TableCell align="center" style={{ width: '450px' }}>

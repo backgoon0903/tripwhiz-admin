@@ -13,7 +13,7 @@ function BoardAddComponent() {
             // @ts-ignore
             const newBoardId = await createBoard(board);
             alert('게시글이 추가되었습니다.');
-            navigate(`/boa/read/${newBoardId}`); // 새 게시글 페이지로 이동
+            navigate(`/app/boa/read/${newBoardId}`); // 새 게시글 페이지로 이동
         } catch (error) {
             console.error('게시글 추가 오류:', error);
             alert('게시글 추가에 실패했습니다.');
@@ -51,7 +51,7 @@ function BoardAddComponent() {
                     />
 
                     <Box display="flex" justifyContent="flex-end" gap={1}>
-                        <Button variant="outlined" color="secondary" onClick={() => navigate('/boa/list')}>
+                        <Button variant="outlined" color="secondary" onClick={() => navigate('/app/boa/list')}>
                             목록으로 돌아가기
                         </Button>
                         <Button variant="contained" color="primary" onClick={handleCreate}>

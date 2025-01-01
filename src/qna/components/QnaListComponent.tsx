@@ -106,7 +106,7 @@ function QnaListComponent() {
   };
   // 질문 클릭 시 상세 페이지로 이동하는 함수_SA
   const handleQuestionClick = (qno: number) => {
-    navigate(`/qna/read/${qno}`); // 질문 번호에 해당하는 상세 페이지로 이동
+    navigate(`/app/qna/read/${qno}`); // 질문 번호에 해당하는 상세 페이지로 이동
   };
 
   return (
@@ -114,7 +114,7 @@ function QnaListComponent() {
       {/*헤더*/}
       <CardHeader
         title={
-          <Box sx={{color: 'gray', display: 'flex', justifyContent: 'center', gap: 2}}>
+          <Box sx={{color: 'black', display: 'flex', justifyContent: 'center', gap: 2}}>
             {['APP', '환불', '픽업', '매장', '영수증'].map((category, index) => (
               <span key={category}>
                 <span
@@ -124,7 +124,7 @@ function QnaListComponent() {
                   {category}
                 </span>
                 {index < 4 && (
-                  <span className="text-gray-400 mx-10">|   </span>
+                  <span className="text-gray-400 mx-10">   </span>
                 )}
               </span>
             ))}

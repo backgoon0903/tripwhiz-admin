@@ -2,6 +2,15 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createAdmin } from "../../api/adminAPI";
 import { ICreateAdmin } from '../../types/admin';
+import {
+    Box,
+    Card,
+    CardContent,
+    CardHeader,
+    Typography,
+    TextField,
+    Button,
+} from "@mui/material";
 
 function SignUpComponent() {
     const [adminData, setAdminData] = useState<ICreateAdmin>({
@@ -36,60 +45,88 @@ function SignUpComponent() {
     };
 
     return (
-      <div style={{ maxWidth: "400px", margin: "0 auto", textAlign: "center" }}>
-          <h2>Admin Registration</h2>
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          {success && <p style={{ color: "green" }}>{success}</p>}
-          <form onSubmit={handleSubmit}>
-              <div style={{ marginBottom: "1rem" }}>
-                  <input
-                    type="text"
-                    name="aname"
-                    value={adminData.aname}
-                    onChange={handleChange}
-                    placeholder="Name"
-                    style={{ padding: "0.5rem", width: "100%" }}
-                    required
-                  />
-              </div>
-              <div style={{ marginBottom: "1rem" }}>
-                  <input
-                    type="text"
-                    name="id"
-                    value={adminData.id}
-                    onChange={handleChange}
-                    placeholder="ID"
-                    style={{ padding: "0.5rem", width: "100%" }}
-                    required
-                  />
-              </div>
-              <div style={{ marginBottom: "1rem" }}>
-                  <input
-                    type="password"
-                    name="pw"
-                    value={adminData.pw}
-                    onChange={handleChange}
-                    placeholder="Password"
-                    style={{ padding: "0.5rem", width: "100%" }}
-                    required
-                  />
-              </div>
-              <button
-                type="submit"
-                style={{
-                    padding: "0.5rem 1rem",
-                    background: "green",
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="100vh"
+        bgcolor="#f9f9f9"
+        px={2}
+      >
+          <Card sx={{ maxWidth: 400, width: "100%", boxShadow: 3 }}>
+              <CardHeader
+                title="Admin Registration"
+                sx={{
+                    textAlign: "center",
+                    bgcolor: "#1976d2",
                     color: "white",
-                    border: "none",
-                    cursor: "pointer",
-                    borderRadius: "4px",
+                    py: 2,
                 }}
-              >
-                  Sign Up
-              </button>
-          </form>
-      </div>
+              />
+              <CardContent>
+                  {error && (
+                    <Typography color="error" variant="body2" sx={{ mb: 2 }}>
+                        {error}
+                    </Typography>
+                  )}
+                  {success && (
+                    <Typography color="success" variant="body2" sx={{ mb: 2 }}>
+                        {success}
+                    </Typography>
+                  )}
+                  <form onSubmit={handleSubmit}>
+                      <Box mb={2}>
+                          <TextField
+                            fullWidth
+                            label="Name"
+                            name="aname"
+                            value={adminData.aname}
+                            onChange={handleChange}
+                            variant="outlined"
+                            required
+                          />
+                      </Box>
+                      <Box mb={2}>
+                          <TextField
+                            fullWidth
+                            label="ID"
+                            name="id"
+                            value={adminData.id}
+                            onChange={handleChange}
+                            variant="outlined"
+                            required
+                          />
+                      </Box>
+                      <Box mb={2}>
+                          <TextField
+                            fullWidth
+                            label="Password"
+                            name="pw"
+                            type="password"
+                            value={adminData.pw}
+                            onChange={handleChange}
+                            variant="outlined"
+                            required
+                          />
+                      </Box>
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        sx={{
+                            py: 1,
+                            fontWeight: "bold",
+                            borderRadius: "8px",
+                        }}
+                      >
+                          Sign Up
+                      </Button>
+                  </form>
+              </CardContent>
+          </Card>
+      </Box>
     );
-}
+};
 
 export default SignUpComponent;

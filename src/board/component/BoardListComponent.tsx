@@ -83,7 +83,7 @@ function BoardListComponent() {
                         {!loading && boardList.length > 0 ? (
                             <>
                                 {/* 상단 고정 게시글 3개 */}
-                                {boardList.slice(0, 3).map((board) => (
+                                {boardList.slice(1, 4).map((board) => (
                                     <TableRow
                                         hover
                                         key={`fixed-${board.bno}`}

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { createBoard } from '../../api/boardAPI'; // createBoard 함수 가져오기
 
 function BoardAddComponent() {
-    const [board, setBoard] = useState({ title: '', content: '' });
+    const [board, setBoard] = useState({ title: '', bcontent: '' });
     const navigate = useNavigate();
 
     // 게시글 생성 함수
@@ -45,8 +45,8 @@ function BoardAddComponent() {
                         margin="normal"
                         multiline
                         rows={12}
-                        value={board.content}
-                        onChange={(e) => setBoard({ ...board, content: e.target.value })}
+                        value={board.bcontent}
+                        onChange={(e) => setBoard({ ...board, bcontent: e.target.value })}
                         sx={{ mb: 2 }}
                     />
 

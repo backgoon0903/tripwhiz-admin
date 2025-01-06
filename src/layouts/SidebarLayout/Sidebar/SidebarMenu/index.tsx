@@ -266,6 +266,42 @@ function SidebarMenu() {
                   disableRipple
                   component={RouterLink}
                   onClick={closeSidebar}
+                  to="/app/luggagemove/list"
+                  startIcon={<TableChartTwoToneIcon />}
+                >
+                  Luggage
+                </Button>
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/app/spot/list"
+                  startIcon={<TableChartTwoToneIcon />}
+                >
+                  Store
+                </Button>
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/app/storeowner/list"
+                  startIcon={<TableChartTwoToneIcon />}
+                >
+                  Manager
+                </Button>
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
+                  to="/app/member/list"
+                  startIcon={<TableChartTwoToneIcon />}
+                >
+                  Customer
+                </Button>
+                <Button
+                  disableRipple
+                  component={RouterLink}
+                  onClick={closeSidebar}
                   to="/app/boa/list"
                   startIcon={<TableChartTwoToneIcon />}
                 >

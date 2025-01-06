@@ -23,7 +23,7 @@ const ListStoreOwner = Loader(
 // StoreOwner 라우터 설정
 const storeOwnerRouter: RouteObject[] = [
     {
-        path: 'storeOwner', // 상대 경로로 수정
+        path: 'storeowner', // 상대 경로로 수정
         children: [
             {
                 path: '',

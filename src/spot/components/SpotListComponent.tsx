@@ -61,14 +61,16 @@ const SpotListComponent = () => {
   if (error) return <div>{error}</div>;
 
   return (
-    <Box sx={{ maxWidth: 1200, mx: "auto", mt: 8 }}>
+    <Box sx={{ maxWidth: 1200, mx: "auto", mt: 4 }}>
       <Button
         variant="contained"
         color="secondary"
         onClick={() => navigate("/app/spot/add")}
-        sx={{ mb: 4 }}
+        sx={{ mb: 2, backgroundColor: '#FFECB3', color: '#68748A', borderColor: '#FFECB3', '&:hover': {
+            backgroundColor: '#FFE082' // Slightly darker yellow on hover
+          } }}
       >
-        Spot 추가
+        지점 생성
       </Button>
       <Grid container spacing={4}>
         {spots.length > 0 ? (
@@ -85,7 +87,9 @@ const SpotListComponent = () => {
                     variant="contained"
                     color="primary"
                     onClick={() => navigate(`/app/spot/read/${spot.spno}`)}
-                    sx={{ mt: 2 }}
+                    sx={{ mt: 2, mr: 2, backgroundColor: '#FFECB3', color: '#68748A','&:hover': {
+                        backgroundColor: '#FFE082', // Slightly darker yellow on hover
+                      }}}
                   >
                     자세히 보기
                   </Button>

@@ -89,6 +89,11 @@ const ProductListComponent: React.FC = () => {
     navigate(`/app/product/read/native/${pno}`); // productId를 기반으로 상세 페이지로 이동
   };
 
+  // moveToAdd 메서드 구현
+  const moveToAdd = () => {
+    navigate(`/app/product/add`); // productId를 기반으로 상세 페이지로 이동
+  };
+
   if (isLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
@@ -110,8 +115,8 @@ const ProductListComponent: React.FC = () => {
   return (
     <Box p={3} bgcolor="#f4f6f8" minHeight="100vh">
       <Paper elevation={3} sx={{ maxWidth: '1200px', margin: 'auto', p: 3 }}>
-        <Typography variant="h4" component="h2" gutterBottom>
-          Product List
+        <Typography variant="h4" component="h2" gutterBottom sx={{padding: '15px'}}>
+          상품
         </Typography>
         {/* 검색창 및 필터 */}
         <Box display="flex" gap={2} mb={3}>
@@ -149,20 +154,36 @@ const ProductListComponent: React.FC = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Image</TableCell>
-                  <TableCell>Product ID</TableCell>
+                  <TableCell sx={{width: '10%'}}></TableCell>
+                  <TableCell sx={{width: '15%'}}>Product ID</TableCell>
                   <TableCell>Name</TableCell>
                   <TableCell>Price</TableCell>
                   <TableCell>Category</TableCell>
+                  <TableCell align="right">
+                    <Button
+                      variant="contained"
+                      sx={{
+                        backgroundColor: '#FFECB3', // Light yellow
+                        color: '#68748A', // Black text
+                        '&:hover': {
+                          backgroundColor: '#FFE082', // Slightly darker yellow on hover
+                        },
+                        padding: '6px 12px',
+                      }}
+                      onClick={moveToAdd}
+                    >
+                      ADD
+                    </Button>
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {products.map((product) => (
+                {products.slice().reverse().map((product) => (
                   <TableRow key={product.pno} onClick={() => moveToRead(product.pno)}>
                     <TableCell>
                       {product.attachFiles && product.attachFiles.length > 0 && product.attachFiles[0].file_name ? (
                         <img
-                          src={`https://tripwhiz.store/api/admin/product/image/${product.attachFiles[0].file_name}`}
+                          src={`http://localhost:8082/api/admin/product/image/${product.attachFiles[0].file_name}`}
                           alt={product.pname}
                           style={{
                             width: '50px',
@@ -186,10 +207,10 @@ const ProductListComponent: React.FC = () => {
                         />
                       )}
                     </TableCell>
-
                     <TableCell>{product.pno}</TableCell>
                     <TableCell>{product.pname}</TableCell>
-                    <TableCell>{`${product.price.toLocaleString()} 원`}</TableCell>
+                    <TableCell>{`${product.price.toLocaleString()}원`}</TableCell>
+                    <TableCell>{`${product.price.toLocaleString()}원`}</TableCell>
                     <TableCell>{product.category.cname}</TableCell>
                   </TableRow>
                 ))}

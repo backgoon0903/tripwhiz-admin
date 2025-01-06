@@ -80,7 +80,7 @@ const ProductReadComponent: React.FC = () => {
             </Typography>
           }
           sx={{
-            textAlign: 'center',
+            textAlign: 'left',
             backgroundColor: '#f0f4f8',
             padding: '16px',
             borderBottom: '1px solid #ddd',
@@ -138,7 +138,7 @@ const ProductReadComponent: React.FC = () => {
                         }}
                       >
                         <img
-                          src={`https://tripwhiz.store/api/admin/product/image/${file.file_name}`}
+                          src={`http://localhost:8082/api/admin/product/image/${file.file_name}`}
                           alt={`Attachment ${index + 1}`}
                           style={{
                             width: '100%',
